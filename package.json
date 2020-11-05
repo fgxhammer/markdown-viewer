@@ -1,0 +1,24 @@
+{
+  "name": "markdown-viewer",
+  "version": "1.0.0",
+  "description": "A markdown viewer built with electron.js",
+  "main": "app/index.js",
+  "scripts": {
+    "start": "electron .",
+    "postinstall": "electron-rebuild",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Franz Gollhammer",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "devtron": "^1.4.0",
+    "electron": "^10.1.5",
+    "electron-packager": "^15.1.0",
+    "electron-rebuild": "^2.3.2",
+    "eslint": "^7.12.1",
+    "eslint-config-standard": "^16.0.1",
+    "eslint-plugin-import": "^2.22.1"
+  }
+}
