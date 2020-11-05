@@ -2,7 +2,14 @@ const { app, BrowserWindow } = require('electron')
 
 app.on('ready', () => {
   console.log('The app is ready ⚡️')
-  const mainWindow = new BrowserWindow({ show: false })
+  
+  const mainWindow = new BrowserWindow({ 
+    show: false,
+    webPreferences: {
+      nodeIntegration: true
+    } 
+  })
+
   mainWindow.loadFile(`${__dirname}/index.html`)
   mainWindow.once('ready-to-show', () => mainWindow.show())
 })
