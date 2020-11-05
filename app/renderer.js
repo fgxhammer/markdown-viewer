@@ -1,4 +1,5 @@
 const marked = require('marked')
+const { ipcRenderer } = require('electron') 
 
 const markdownView = document.querySelector('#markdown')
 const htmlView = document.querySelector('#html')
@@ -18,4 +19,8 @@ markdownView.addEventListener('keyup', event => {
   debugger
   const currentContent = event.target.value
   renderMarkdownToHtml(currentContent)
+})
+
+openFileButton.addEventListener('click', () => {
+  ipcRenderer.invoke('get-file-from-user')
 })
