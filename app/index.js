@@ -16,9 +16,13 @@ ipcMain.handle('get-file-from-user', async event => {
       { name: 'Text Files', extensions: ['txt', 'text'] }
     ]
   })
-  if (dialogResponse.canceled) return
-  const fileContent = await getFilesAsync(dialogResponse.filePaths[0])
-  event.sender.send('selected-file', fileContent)
+  try {
+    if (dialogResponse.canceled) return
+    const fileContent = await getFilesAsync(dialogResponse.filePaths[0])
+    event.sender.send('selected-file', fileContent)
+  } catch (err) {
+    console.error(err)
+  }
 })
 
 app.on('ready', () => {
