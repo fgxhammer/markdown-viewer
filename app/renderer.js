@@ -30,14 +30,17 @@ const updateUserInterface = ({ hasChanges, fileOpened }) => {
   const appTitle = 'Mdown ⬇'
 
   if (fileOpened) {
-    currentWindow.setTitle(`${appTitle} - ${path.basename(fileOpened)}`)
+    currentWindow.setTitle(`${path.basename(fileOpened)} - ${appTitle}`)
   }
   if (hasChanges && fileOpened) {
-    currentWindow.setTitle(`${appTitle} - ${path.basename(fileOpened)} ●`)
+    currentWindow.setTitle(`${path.basename(fileOpened)} ● - ${appTitle}`)
   }
   if (hasChanges && !fileOpened) {
-    currentWindow.setTitle(`${appTitle} - new File ●`)
+    currentWindow.setTitle(`New File ● - ${appTitle}`)
   }
+
+  currentWindow.setRepresentedFilename(fileOpened)
+  currentWindow.setDocumentEdited(hasChanges)
 
   revertButton.disabled = !hasChanges
   saveMarkdownButton.disabled = !hasChanges
@@ -59,5 +62,5 @@ ipcRenderer.on('file-open', (e, { filePath, fileContent }) => {
   originalFileContent = fileContent
   markdownView.value = fileContent
   renderMarkdownToHtml(fileContent)
-  updateUserInterface({ hasChanges, fileOpened})
+  updateUserInterface({ fileOpened })
 })
