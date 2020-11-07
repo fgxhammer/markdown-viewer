@@ -38,6 +38,9 @@ const updateUserInterface = ({ hasChanges, fileOpened }) => {
   if (hasChanges && !fileOpened) {
     currentWindow.setTitle(`${appTitle} - new File ●`)
   }
+
+  revertButton.disabled = !hasChanges
+  saveMarkdownButton.disabled = !hasChanges
 }
 
 markdownView.addEventListener('keyup', event => {
