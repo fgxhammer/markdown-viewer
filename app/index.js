@@ -20,6 +20,7 @@ ipcMain.handle('get-file-from-user', async e => {
     if (dialogResponse.canceled) return
     const filePath = dialogResponse.filePaths[0]
     const fileContent = await getFilesAsync(filePath)
+    app.addRecentDocument(filePath)
     e.sender.send('file-open', { filePath, fileContent })
   } catch (err) {
     console.error(err)
