@@ -1,6 +1,17 @@
 const marked = require('marked')
-const { ipcRenderer } = require('electron') 
+const { ipcRenderer, app } = require('electron')
+const { remote } = require('electron')
+const path = require('path')
 
+// Constants
+const appTitle = 'Mdown ⬇'
+let fileOpened = null
+let originalFileContent = ''
+
+// Electron elements
+const currentWindow = remote.getCurrentWindow()
+
+// Html elements
 const markdownView = document.querySelector('#markdown')
 const htmlView = document.querySelector('#html')
 const newFileButton = document.querySelector('#new-file')
@@ -15,8 +26,12 @@ const renderMarkdownToHtml = markdown => {
   htmlView.innerHTML = marked(markdown, { sanitize: true })
 }
 
+const updateUserInterface = () => {
+  const title = fileOpened ? `${appTitle} - ${path.basename(fileOpened)}` : appTitle
+  currentWindow.setTitle(title)
+}
+
 markdownView.addEventListener('keyup', event => {
-  debugger
   const currentContent = event.target.value
   renderMarkdownToHtml(currentContent)
 })
@@ -25,7 +40,10 @@ openFileButton.addEventListener('click', () => {
   ipcRenderer.invoke('get-file-from-user')
 })
 
-ipcRenderer.on('file-selected', (a, b) => {
-  console.log(a)
-  console.log(b)
+ipcRenderer.on('file-open', (e, { filePath, fileContent }) => {
+  fileOpened = filePath
+  originalFileContent = fileContent
+  markdownView.value = fileContent
+  renderMarkdownToHtml(fileContent)
+  updateUserInterface()
 })
