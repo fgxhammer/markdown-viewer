@@ -33,6 +33,7 @@ app.on('ready', () => {
     width: 1240,
     height: 800,
     show: false,
+    title: 'Mdown ⬇',
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -41,7 +42,7 @@ app.on('ready', () => {
 
   mainWindow.loadFile(`${__dirname}/index.html`)
   mainWindow.once('ready-to-show', () => mainWindow.show())
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 })
 
 console.log('App starting up ... 🚀')
