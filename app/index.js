@@ -9,6 +9,18 @@ const getFilesAsync = async (filePath) => {
   return fileContent
 }
 
+ipcMain.handle('save-file', async (e, file) => {
+  await console.log(e, file)
+  await console.log('save-file', e, fileOpened, fileContent)
+  try {
+    const newFile = await writeFile(fileOpened, fileContent)
+    await console.log(newFile)
+    return newFile
+  } catch(e) {
+    console.error(e)
+  }
+})
+
 ipcMain.handle('get-file-from-user', async e => {
   const dialogResponse = await dialog.showOpenDialog({
     properties: ['openFile'],
@@ -25,18 +37,6 @@ ipcMain.handle('get-file-from-user', async e => {
     e.sender.send('file-open', { filePath, fileContent })
   } catch (err) {
     console.error(err)
-  }
-})
-
-ipcMain.handle('save-file', async (e, file) => {
-  await console.log(e, file)
-  await console.log('save-file', e, fileOpened, fileContent)
-  try {
-    const newFile = await writeFile(fileOpened, fileContent).catch(e => console.log(e))
-    await console.log(newFile)
-    return newFile
-  } catch(e) {
-    console.error(e)
   }
 })
 

@@ -1,6 +1,6 @@
 const marked = require('marked')
 const { ipcRenderer, app } = require('electron')
-const { remote } = require('electron')
+// const { remote } = require('electron')
 const path = require('path')
 const dompurify = require('dompurify')
 
@@ -10,7 +10,7 @@ let originalFileContent = ''
 let currentFileContent = ''
 
 // Electron elements
-const currentWindow = remote.getCurrentWindow()
+// const currentWindow = remote.getCurrentWindow()
 
 // Html elements
 const markdownView = document.querySelector('#markdown')
@@ -32,18 +32,23 @@ const updateUserInterface = ({ hasChanges, fileOpened }) => {
   const appTitle = 'Mdown ⬇'
 
   if (fileOpened) {
-    currentWindow.setTitle(`${path.basename(fileOpened)} - ${appTitle}`)
+    // currentWindow.setTitle(`${path.basename(fileOpened)} - ${appTitle}`)
+    document.title = `${path.basename(fileOpened)} - ${appTitle}`
   }
   if (hasChanges && fileOpened) {
-    currentWindow.setTitle(`${path.basename(fileOpened)} ● - ${appTitle}`)
+    // currentWindow.setTitle(`${path.basename(fileOpened)} ● - ${appTitle}`)
+    document.title = `${path.basename(fileOpened)} ● - ${appTitle}`
   }
   if (hasChanges && !fileOpened) {
-    currentWindow.setTitle(`New File ● - ${appTitle}`)
+    // currentWindow.setTitle(`New File ● - ${appTitle}`)
+    document.title = `New File ● - ${appTitle}`
   }
 
-  currentWindow.setRepresentedFilename(fileOpened)
-  currentWindow.setDocumentEdited(hasChanges)
+  // TODO do this with channels
+  // currentWindow.setRepresentedFilename(fileOpened)
+  // currentWindow.setDocumentEdited(hasChanges)
 
+  console.log(hasChanges)
   revertButton.disabled = !hasChanges
   saveMarkdownButton.disabled = !hasChanges
 }
@@ -59,7 +64,8 @@ openFileButton.addEventListener('click', () => {
   ipcRenderer.invoke('get-file-from-user')
 })
 
-saveHtmlButton.addEventListener('click', (e) => {
+saveHtmlButton.addEventListener('click', () => {
+  console.log('TRIGGED')
   ipcRenderer.invoke('save-file', { fileOpened, currentFileContent })
 })
 
