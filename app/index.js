@@ -1,6 +1,7 @@
 const { app, BrowserWindow, dialog } = require('electron')
-const promisify = require('util').promisify
+const { promisify } = require('util')
 const readFile = promisify(require('fs').readFile)
+const writeFile = promisify(require('fs').writeFile)
 const { ipcMain } = require('electron')
 
 const getFilesAsync = async (filePath) => {
@@ -24,6 +25,18 @@ ipcMain.handle('get-file-from-user', async e => {
     e.sender.send('file-open', { filePath, fileContent })
   } catch (err) {
     console.error(err)
+  }
+})
+
+ipcMain.handle('save-file', async (e, file) => {
+  await console.log(e, file)
+  await console.log('save-file', e, fileOpened, fileContent)
+  try {
+    const newFile = await writeFile(fileOpened, fileContent).catch(e => console.log(e))
+    await console.log(newFile)
+    return newFile
+  } catch(e) {
+    console.error(e)
   }
 })
 

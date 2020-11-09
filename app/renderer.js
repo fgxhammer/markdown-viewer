@@ -2,10 +2,12 @@ const marked = require('marked')
 const { ipcRenderer, app } = require('electron')
 const { remote } = require('electron')
 const path = require('path')
+const dompurify = require('dompurify')
 
 // Globals
 let fileOpened = null
 let originalFileContent = ''
+let currentFileContent = ''
 
 // Electron elements
 const currentWindow = remote.getCurrentWindow()
@@ -22,7 +24,7 @@ const showFileButton = document.querySelector('#show-file')
 const openInDefaultButton = document.querySelector('#open-in-default')
 
 const renderMarkdownToHtml = markdown => {
-  htmlView.innerHTML = marked(markdown, { sanitize: true })
+  htmlView.innerHTML = dompurify.sanitize(marked(markdown))
 }
 
 // TODO Fix title flickering on change
@@ -47,7 +49,7 @@ const updateUserInterface = ({ hasChanges, fileOpened }) => {
 }
 
 markdownView.addEventListener('keyup', event => {
-  const currentFileContent = event.target.value
+  currentFileContent = event.target.value
   renderMarkdownToHtml(currentFileContent)
   const hasChanges = currentFileContent !== originalFileContent
   updateUserInterface({ hasChanges, fileOpened })
@@ -57,9 +59,13 @@ openFileButton.addEventListener('click', () => {
   ipcRenderer.invoke('get-file-from-user')
 })
 
+saveHtmlButton.addEventListener('click', (e) => {
+  ipcRenderer.invoke('save-file', { fileOpened, currentFileContent })
+})
+
 ipcRenderer.on('file-open', (e, { filePath, fileContent }) => {
   fileOpened = filePath
-  originalFileContent = fileContent
+  originalFileContent, currentFileContent = fileContent
   markdownView.value = fileContent
   renderMarkdownToHtml(fileContent)
   updateUserInterface({ fileOpened })
